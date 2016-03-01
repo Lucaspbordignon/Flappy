@@ -1,5 +1,5 @@
 import pygame
-from random import randint
+import random
 
 #Global Variables
 black = (0,0,0)
@@ -13,7 +13,7 @@ roof = 26
 x_bird = 200
 y_bird = 400
 x_pipes = 550
-y_pipes = 480       #Pipe image has 320 pixels of height.
+y_pipes = 480       #Pipe image has 620 pixels of height.
 x_increase = 0
 y_increase = 0
 pipes_stop = 0
@@ -42,9 +42,9 @@ def pipes(x, y):
     """  Simple function to create the obstacles, the pipes."""
     pipe_img_bottom = pygame.image.load('media/pipe-green-bottom.png')
     pipe_img_top = pygame.image.load('media/pipe-green-top.png')
-    screen.blit(pipe_img_top, (x, (y-480)))
+    screen.blit(pipe_img_top, (x, (y-780)))
     screen.blit(pipe_img_bottom, (x, y))
-    
+        
     
 def gameover():
     """Prints 'game over' when you hit the ground or the roof."""
@@ -81,8 +81,10 @@ while not finish:
     pipes(x_pipes, y_pipes)
     if x_pipes == -50 :
         x_pipes = 550
+        y_pipes = random.randint(210, 750)
     elif pipes_stop == 0:
-        x_pipes -= 3    
+        x_pipes -= 3   
+    
         
     pygame.display.flip()
     clock.tick(60)
