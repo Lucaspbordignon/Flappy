@@ -3,23 +3,16 @@ import random
 
 #Global Variables
 sizes = {'Bird':(34, 24), 'Pipe':(52, 620)}
-black = (0,0,0)
-white = (255,255,255)
-green = (55, 180, 55)
-yellow = (250, 255, 61)
 finish = False
 clock = pygame.time.Clock()
-ground = 774
-roof = 1
-x_bird = 200
-y_bird = 400
-x_pipes = 550
-y_pipes = 480       
-x_increase = 0
+ground, roof = 774, 1
+x_bird, y_bird = 200, 400
+x_pipes, y_pipes = 550, 480
 y_increase = 0
 pipes_stop = 0
 bird_img_sel = 0
 restart = 0
+mouse_position = (-1, -1)
 background_img = pygame.image.load('media/images/background-day.png')
 
 
@@ -49,11 +42,17 @@ def pipes(x, y):
         
     
 def gameover():
-    """Prints 'game over' when you hit the ground or the roof."""
+    """Prints 'game over' when the bird hit the ground or the roof."""
     font = pygame.font.SysFont(None, 50)
     text = pygame.image.load('media/images/gameover.png')
     screen.blit(text, [200, 350])
             
+def restart_game():
+    x_bird, y_bird = 200, 400
+    x_pipes, y_pipes = 550, 480
+    pipes_stop = 0
+    restart = 0
+
 def restart_button(position):
     if position[0] >= 0 and position[0] <= 100:
         if position[1] >= 0 and position[1] <= 100:
@@ -65,6 +64,8 @@ while not finish:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finish = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_position = pygame.mouse.get_pos()         
         if not pipes_stop == 1: 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
@@ -74,21 +75,26 @@ while not finish:
                 if event.key == pygame.K_UP:
                     y_increase = -10  
                     bird_img_sel = 1
+   
 
-    screen.blit(background_img, (0,0))        
-    
+    #Initialize the bird and the background.
+    screen.blit(background_img, (0,0))              
     bird(x_bird, y_bird, bird_img_sel)   
     y_bird += y_increase
     
+    #Moves the pipes.
     pipes(x_pipes, y_pipes)
     if x_pipes == -50 :
         x_pipes = 550
         y_pipes = random.randint(210, 750)
     elif pipes_stop == 0:
         x_pipes -= 3 
+   
+    restart_button(mouse_position)
+    
     
     if restart == 1:
-        pipes_stop = 0
+        restart_game()
     elif (y_bird > ground) or (y_bird < roof):
         gameover()
         y_increase = 0
@@ -100,9 +106,7 @@ while not finish:
             pipes_stop = 1
     else:
         pipes_stop = 0
-    
-  
-    
-        
+
+    #Update the screen.    
     pygame.display.flip()
     clock.tick(60)
