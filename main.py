@@ -1,10 +1,5 @@
 import pygame
 import random
-import re
-
-#Global Variables
-
-
 
 #Game display settings
 pygame.init()
@@ -56,10 +51,6 @@ def score(score_dozen, score_unity, score_img):
     screen.blit(score_img[score_unity], [310, 100])
 
 def restart_game():
-    #x_bird, y_bird = 200, 400
-    #x_pipes, y_pipes = 550, 480
-    #pipes_stop = 0
-    #restart = 0
     play()
 
 def restart_button(position):
@@ -82,11 +73,11 @@ def play():
     score_dozen, score_unity = 0, 0
     mouse_position = (-1, -1)
     background_img = pygame.image.load('media/images/background-day.png')
-    finish = False
-    while not finish:
+    
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                finish = True
+                return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()         
             if not pipes_stop == 1: 
