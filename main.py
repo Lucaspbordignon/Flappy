@@ -1,25 +1,21 @@
 import pygame
 import random
+import re
 
 #Global Variables
 sizes = {'Bird':(34, 24), 'Pipe':(52, 620)}
-black = (0,0,0)
-white = (255,255,255)
-green = (55, 180, 55)
-yellow = (250, 255, 61)
+score_img = {}
 finish = False
 clock = pygame.time.Clock()
-ground = 774
-roof = 1
-x_bird = 200
-y_bird = 400
-x_pipes = 550
-y_pipes = 480       
-x_increase = 0
+ground, roof = 774, 1
+x_bird, y_bird = 200, 400
+x_pipes, y_pipes = 550, 480
 y_increase = 0
 pipes_stop = 0
 bird_img_sel = 0
 restart = 0
+score_dozen, score_unity = 0, 0
+mouse_position = (-1, -1)
 background_img = pygame.image.load('media/images/background-day.png')
 
 
@@ -49,11 +45,35 @@ def pipes(x, y):
         
     
 def gameover():
-    """Prints 'game over' when you hit the ground or the roof."""
-    font = pygame.font.SysFont(None, 50)
+    """Prints 'game over' when the bird hit the ground or the roof."""
     text = pygame.image.load('media/images/gameover.png')
     screen.blit(text, [200, 350])
-            
+
+def load_score_images():
+    """Load external files (images) for the score."""
+    score_img[0] = pygame.image.load('media/images/0.png')
+    score_img[1] = pygame.image.load('media/images/1.png')
+    score_img[2] = pygame.image.load('media/images/2.png')
+    score_img[3] = pygame.image.load('media/images/3.png')
+    score_img[4] = pygame.image.load('media/images/4.png')
+    score_img[5] = pygame.image.load('media/images/5.png')
+    score_img[6] = pygame.image.load('media/images/6.png')
+    score_img[7] = pygame.image.load('media/images/7.png')
+    score_img[8] = pygame.image.load('media/images/8.png')
+    score_img[9] = pygame.image.load('media/images/9.png')
+
+
+def score(score_dozen, score_unity):
+    """Show the actual score over the screen."""
+    screen.blit(score_img[score_dozen], [290, 100])
+    screen.blit(score_img[score_unity], [310, 100])
+
+def restart_game():
+    x_bird, y_bird = 200, 400
+    x_pipes, y_pipes = 550, 480
+    pipes_stop = 0
+    restart = 0
+
 def restart_button(position):
     if position[0] >= 0 and position[0] <= 100:
         if position[1] >= 0 and position[1] <= 100:
@@ -65,6 +85,8 @@ while not finish:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             finish = True
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_position = pygame.mouse.get_pos()         
         if not pipes_stop == 1: 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
@@ -74,35 +96,46 @@ while not finish:
                 if event.key == pygame.K_UP:
                     y_increase = -10  
                     bird_img_sel = 1
+   
 
-    screen.blit(background_img, (0,0))        
-    
+    #Initialize the bird and the background.
+    screen.blit(background_img, (0,0))              
     bird(x_bird, y_bird, bird_img_sel)   
     y_bird += y_increase
-    
+    load_score_images()
+
+    #Moves the pipes.
     pipes(x_pipes, y_pipes)
     if x_pipes == -50 :
         x_pipes = 550
         y_pipes = random.randint(210, 750)
     elif pipes_stop == 0:
         x_pipes -= 3 
-    
+   
+    restart_button(mouse_position)
+    #Count the score.
+    if x_bird > x_pipes+48 and x_bird < x_pipes+52:
+        if score_unity == 9:
+            score_dozen += 1
+            score_unity = 0
+        else :  
+            score_unity += 1
+    score(score_dozen, score_unity)
+
     if restart == 1:
-        pipes_stop = 0
+        restart_game()
     elif (y_bird > ground) or (y_bird < roof):
         gameover()
         y_increase = 0
         pipes_stop = 1
-    elif ((x_bird + sizes['Bird'][0]) >= x_pipes) and (x_bird <= (x_pipes + 50)):
-        if ((y_bird + sizes['Bird'][1]) >= y_pipes) or (y_bird <= (y_pipes-160)):
+    elif ((x_bird + sizes['Bird'][0]) >= x_pipes)and(x_bird <= (x_pipes + 50)):
+        if ((y_bird + sizes['Bird'][1]) >= y_pipes)or(y_bird <= (y_pipes-160)):
             gameover()
             y_increase = 0
             pipes_stop = 1
     else:
         pipes_stop = 0
-    
-  
-    
-        
+
+    #Update the screen.    
     pygame.display.flip()
     clock.tick(60)
