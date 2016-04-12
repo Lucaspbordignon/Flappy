@@ -7,7 +7,6 @@ screen_size = 600, 800
 screen = pygame.display.set_mode(screen_size)
 pygame.display.set_caption('Flappy Bird')
 
-
 def bird(x, y, image_sel):
     """  Simple function to bring life to the bird."""
     if image_sel == 0:
@@ -23,8 +22,7 @@ def pipes(x, y):
     pipe_img_bottom = pygame.image.load('media/images/pipe-green-bottom.png')
     pipe_img_top = pygame.image.load('media/images/pipe-green-top.png')
     screen.blit(pipe_img_top, (x, (y-780)))
-    screen.blit(pipe_img_bottom, (x, y))
-        
+    screen.blit(pipe_img_bottom, (x, y))     
     
 def gameover():
     """Prints 'game over' when the bird hit the ground or the roof."""
@@ -44,14 +42,10 @@ def load_score_images(score_img_list):
     score_img_list[8] = pygame.image.load('media/images/8.png')
     score_img_list[9] = pygame.image.load('media/images/9.png')
 
-
 def score(score_dozen, score_unity, score_img):
     """Show the actual score over the screen."""
     screen.blit(score_img[score_dozen], [290, 100])
     screen.blit(score_img[score_unity], [310, 100])
-
-def restart_game():
-    play()
 
 def restart_button(position):
     if position[0] >= 0 and position[0] <= 100:
@@ -77,7 +71,7 @@ def play():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return 0
+                return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()         
             if not pipes_stop == 1: 
@@ -120,14 +114,14 @@ def play():
         elif (y_bird > ground) or (y_bird < roof):
             # Bird dies
             gameover()
-            restart_game()
+            return play()
             y_increase = 0
             pipes_stop = 1
         elif ((x_bird + sizes['Bird'][0])>=x_pipes)and(x_bird<=(x_pipes+50)):
             if ((y_bird + sizes['Bird'][1])>=y_pipes)or(y_bird<=(y_pipes-160)):
                 # Bird dies
                 gameover()
-                restart_game()
+                return play()
                 y_increase = 0
                 pipes_stop = 1
         else:
@@ -137,4 +131,6 @@ def play():
         pygame.display.flip()
         clock.tick(60)
 
-play()
+if __name__ == "__main__":
+    play()
+
