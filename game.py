@@ -61,10 +61,10 @@ class Game:
         self.score_img[8] = pygame.image.load('media/images/8.png')
         self.score_img[9] = pygame.image.load('media/images/9.png')
 
-    def score(self, score_dozen, score_unity):
+    def score(self):
         """Show the actual score over the screen."""
-        self.screen.blit(self.score_img[score_dozen], [290, 100])
-        self.screen.blit(self.score_img[score_unity], [310, 100])
+        self.screen.blit(self.score_img[self.score_dozen], [290, 100])
+        self.screen.blit(self.score_img[self.score_unity], [310, 100])
     
     def play(self):
         while True:
@@ -105,19 +105,19 @@ class Game:
                     self.score_unity = 0
                 else :  
                     self.score_unity += 1
-            self.score(self.score_dozen, self.score_unity)
+            self.score()
 
             if (self.y_bird > self.ground) or (self.y_bird < self.roof):
                 # Bird dies
                 self.gameover()
-                return 1
+                return 1 # Needs option to restart game here
                 self.y_increase = 0
                 self.pipes_stop = 1
             elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_pipes)and(self.x_bird<=(self.x_pipes+50)):
                 if ((self.y_bird + self.sizes['Bird'][1])>=self.y_pipes)or(self.y_bird<=(self.y_pipes-160)):
                     # Bird dies
                     self.gameover()
-                    return 1
+                    return 1 # Needs option to restart game here
                     self.y_increase = 0
                     self.pipes_stop = 1
             else:
