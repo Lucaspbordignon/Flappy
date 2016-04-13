@@ -27,7 +27,7 @@ class Game:
         self.background_img=pygame.image.load('media/images/background-day.png')
     
     def bird(self, x, y, image_sel):
-        """  Simple function to bring life to the bird."""
+        """Simple function to bring life to the bird."""
         if image_sel == 0:
             self.bird_img = pygame.image.load('media/images/yellowbird-midflap.png')
         elif image_sel == 1:
@@ -37,7 +37,7 @@ class Game:
         self.screen.blit(self.bird_img, (x, y))
 
     def pipes(self, x, y):
-        """  Simple function to create the obstacles, the pipes."""
+        """Simple function to create the obstacles, the pipes."""
         self.pipe_img_bottom = pygame.image.load('media/images/pipe-green-bottom.png')
         self.pipe_img_top = pygame.image.load('media/images/pipe-green-top.png')
         self.screen.blit(self.pipe_img_top, (x, (y-780)))
@@ -45,9 +45,11 @@ class Game:
     
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
-        text = pygame.image.load('media/images/gameover.png')
-        self.screen.blit(text, [200, 350])
-    
+        self.text = pygame.image.load('media/images/gameover.png')
+        self.restart_button_img = pygame.image.load('media/images/restart-button.png')
+        self.screen.blit(self.text, [200, 350])
+        self.screen.blit(self.restart_button_img, [235, 550])
+            
     def load_score_images(self):
         """Load external files (images) for the score."""
         self.score_img[0] = pygame.image.load('media/images/0.png')
@@ -67,6 +69,7 @@ class Game:
         self.screen.blit(self.score_img[self.score_unity], [310, 100])
     
     def play(self):
+        """Initialize the software."""
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -107,17 +110,19 @@ class Game:
                     self.score_unity += 1
             self.score()
 
-            if (self.y_bird > self.ground) or (self.y_bird < self.roof):
+            if (self.y_bird > self.ground+4) or (self.y_bird < self.roof-4):
                 # Bird dies
                 self.gameover()
-                return 1 # Needs option to restart game here
+                pygame.display.flip()
+                return 2 
                 self.y_increase = 0
                 self.pipes_stop = 1
-            elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_pipes)and(self.x_bird<=(self.x_pipes+50)):
+            elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_pipes+3)and(self.x_bird<=(self.x_pipes+50)):
                 if ((self.y_bird + self.sizes['Bird'][1])>=self.y_pipes)or(self.y_bird<=(self.y_pipes-160)):
                     # Bird dies
                     self.gameover()
-                    return 1 # Needs option to restart game here
+                    pygame.display.flip()
+                    return 2 
                     self.y_increase = 0
                     self.pipes_stop = 1
             else:
