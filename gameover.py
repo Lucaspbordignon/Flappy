@@ -9,6 +9,8 @@ class Gameover:
     def restart_button(self):
         while self.mouse_position == (0,0):
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return 0
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_position = pygame.mouse.get_pos()
 

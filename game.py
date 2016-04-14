@@ -70,6 +70,7 @@ class Game:
     
     def play(self):
         """Initialize the software."""
+        self.load_score_images()
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -91,8 +92,7 @@ class Game:
             self.screen.blit(self.background_img, (0,0))              
             self.bird(self.x_bird,self. y_bird, self.bird_img_sel)   
             self.y_bird += self.y_increase
-            self.load_score_images()
-
+            
             #Moves the pipes.
             self.pipes(self.x_pipes, self.y_pipes)
             if self.x_pipes == -50 :
@@ -131,4 +131,3 @@ class Game:
             #Update the screen.    
             pygame.display.flip()
             self.clock.tick(60)
-
