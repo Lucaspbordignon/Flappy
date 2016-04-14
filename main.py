@@ -1,7 +1,6 @@
 import pygame
 import random
 from game import *
-from gameover import *
 
 if __name__ == "__main__":
 
@@ -9,7 +8,6 @@ if __name__ == "__main__":
     restart = test.play()
     while restart == 1 or restart == 2:
         test = Game()
-        gameover = Gameover()
         if restart == 2:
-           restart = gameover.restart_button()
+           restart = test.restart_button()
 

@@ -11,20 +11,18 @@ class Game:
         self.sizes = {'Bird':(34, 24), 'Pipe':(52, 620)}
         self.score_img = {}
         self.clock = pygame.time.Clock()
-        self.ground = 774
-        self.roof = 1
-        self.x_bird = 200
-        self.y_bird = 400
-        self.x_pipes = 550
-        self.y_pipes = 480
+        self.ground, self.roof = 774, 1
+        self.x_bird, self.y_bird = 200, 400
+        self.x_pipes, self.y_pipes = 550, 480
         self.y_increase = 0
         self.pipes_stop = 0
         self.bird_img_sel = 0
         self.restart = 0
-        self.score_dozen = 0
-        self.score_unity = 0
-        self.mouse_position = (-1, -1)
+        self.score_dozen, self.score_unity = 0, 0
+        self.mouse_position = (0, 0)
         self.background_img=pygame.image.load('media/images/background-day.png')
+        self.pipe_img_bottom = pygame.image.load('media/images/pipe-green-bottom.png')
+        self.pipe_img_top = pygame.image.load('media/images/pipe-green-top.png')
     
     def bird(self, x, y, image_sel):
         """Simple function to bring life to the bird."""
@@ -37,11 +35,14 @@ class Game:
         self.screen.blit(self.bird_img, (x, y))
 
     def pipes(self, x, y):
-        """Simple function to create the obstacles, the pipes."""
-        self.pipe_img_bottom = pygame.image.load('media/images/pipe-green-bottom.png')
-        self.pipe_img_top = pygame.image.load('media/images/pipe-green-top.png')
+        """Simple function to create and move the obstacles, the pipes."""
         self.screen.blit(self.pipe_img_top, (x, (y-780)))
         self.screen.blit(self.pipe_img_bottom, (x, y))
+        if self.x_pipes == -50 :
+            self.x_pipes = 550
+            self.y_pipes = random.randint(210, 750)
+        elif self.pipes_stop == 0:
+            self.x_pipes -= 3 
     
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
@@ -49,6 +50,19 @@ class Game:
         self.restart_button_img = pygame.image.load('media/images/restart-button.png')
         self.screen.blit(self.text, [200, 350])
         self.screen.blit(self.restart_button_img, [235, 550])
+            
+    def restart_button(self):
+        while self.mouse_position == (0,0):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return 0
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.mouse_position = pygame.mouse.get_pos()
+
+        if 235 <= self.mouse_position[0] <= 365:
+            if 550 <= self.mouse_position[1] <= 590:
+                self.mouse_position = (0, 0)
+                return self.play()             
             
     def load_score_images(self):
         """Load external files (images) for the score."""
@@ -95,12 +109,7 @@ class Game:
             
             #Moves the pipes.
             self.pipes(self.x_pipes, self.y_pipes)
-            if self.x_pipes == -50 :
-                self.x_pipes = 550
-                self.y_pipes = random.randint(210, 750)
-            elif self.pipes_stop == 0:
-                self.x_pipes -= 3 
-           
+                       
             #Count the score.
             if self.x_bird > self.x_pipes+48 and self.x_bird < self.x_pipes+52:
                 if self.score_unity == 9:
