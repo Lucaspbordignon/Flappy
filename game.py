@@ -13,11 +13,11 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ground, self.roof = 774, 1
         self.x_bird, self.y_bird = 200, 400
-        self.x_pipes, self.y_pipes = 550, 480
+        self.x_pipe, self.y_pipe = 550, random.randint(210, 750)  
+        self.x_second_pipe, self.y_second_pipe = 900, random.randint(210, 750)  
+        self.bird_img_sel = 0
         self.y_increase = 0
         self.pipes_stop = 0
-        self.bird_img_sel = 0
-        self.restart = 0
         self.score_dozen, self.score_unity = 0, 0
         self.mouse_position = (0, 0)
         self.background_img=pygame.image.load('media/images/background-day.png')
@@ -38,12 +38,15 @@ class Game:
         """Simple function to create and move the obstacles, the pipes."""
         self.screen.blit(self.pipe_img_top, (x, (y-780)))
         self.screen.blit(self.pipe_img_bottom, (x, y))
-        if self.x_pipes == -50 :
-            self.x_pipes = 550
-            self.y_pipes = random.randint(210, 750)
+        if self.x_pipe == -50:
+            self.x_pipe = 700
+            self.y_pipe = random.randint(210, 750)
+        if self.x_second_pipe == -50:
+            self.x_second_pipe = 700
+            self.y_second_pipe = random.randint(210, 750)    
         elif self.pipes_stop == 0:
-            self.x_pipes -= 3 
-    
+            self.x_second_pipe -= 2 
+            self.x_pipe -= 2
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
         self.text = pygame.image.load('media/images/gameover.png')
@@ -52,6 +55,7 @@ class Game:
         self.screen.blit(self.restart_button_img, [235, 550])
             
     def restart_button(self):
+        """Wait for a mouse click to reset or finish the game."""
         while self.mouse_position == (0,0):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -93,25 +97,24 @@ class Game:
                     self.mouse_position = pygame.mouse.get_pos()         
                 if not self.pipes_stop == 1: 
                     if event.type == pygame.KEYUP:
-                        if event.key == pygame.K_UP:
-                            self.y_increase = 4
-                            self.bird_img_sel = 2
+                        self.y_increase = 7
+                        self.bird_img_sel = 2
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
-                            self.y_increase = -10  
-                            self.bird_img_sel = 1
-           
-
+                            self.y_increase = -5  
+                            self.bird_img_sel = 1 
+                    
             #Initialize the bird and the background.
             self.screen.blit(self.background_img, (0,0))              
             self.bird(self.x_bird,self. y_bird, self.bird_img_sel)   
             self.y_bird += self.y_increase
             
             #Moves the pipes.
-            self.pipes(self.x_pipes, self.y_pipes)
+            self.pipes(self.x_pipe, self.y_pipe)
+            self.pipes(self.x_second_pipe, self.y_second_pipe)
                        
             #Count the score.
-            if self.x_bird > self.x_pipes+48 and self.x_bird < self.x_pipes+52:
+            if self.x_bird > self.x_pipe+48 and self.x_bird < self.x_pipe+52:
                 if self.score_unity == 9:
                     self.score_dozen += 1
                     self.score_unity = 0
@@ -126,12 +129,19 @@ class Game:
                 return 2 
                 self.y_increase = 0
                 self.pipes_stop = 1
-            elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_pipes+3)and(self.x_bird<=(self.x_pipes+50)):
-                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_pipes)or(self.y_bird<=(self.y_pipes-160)):
+            elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_pipe+3)and(self.x_bird<=(self.x_pipe+50)):
+                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_pipe)or(self.y_bird<=(self.y_pipe-160)):
                     # Bird dies
                     self.gameover()
                     pygame.display.flip()
                     return 2 
+                    self.y_increase = 0
+                    self.pipes_stop = 1
+            elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_second_pipe+3)and(self.x_bird<=(self.x_second_pipe+50)):
+                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_second_pipe)or(self.y_bird<=(self.y_second_pipe-160)):
+                    self.gameover()
+                    pygame.display.flip()
+                    return 2
                     self.y_increase = 0
                     self.pipes_stop = 1
             else:
