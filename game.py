@@ -107,7 +107,7 @@ class Game:
             self.screen.blit(self.background_img, (0,0))
             self.bird(self.x_bird,self. y_bird, self.bird_img_sel)
             self.y_bird += self.y_increase
-            self.y_increase += 0.15
+            self.y_increase += 0.3
 
             #Moves the pipes.
             self.pipes(self.x_pipe, self.y_pipe)
