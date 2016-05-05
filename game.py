@@ -14,7 +14,7 @@ class Game:
         self.ground, self.roof = 774, 1
         self.x_bird, self.y_bird = 200.0, 400.0
         self.x_pipe, self.y_pipe = 550, random.randint(210, 750)
-        self.x_second_pipe, self.y_second_pipe = 900, random.randint(210, 750)
+        self.x_second_pipe, self.y_second_pipe = 950, random.randint(210, 750)
         self.bird_img_sel = 0
         self.y_increase = 0.0
         self.pipes_stop = 0
@@ -47,6 +47,7 @@ class Game:
         elif self.pipes_stop == 0:
             self.x_second_pipe -= 2
             self.x_pipe -= 2
+
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
         self.text = pygame.image.load('media/images/gameover.png')
@@ -100,14 +101,15 @@ class Game:
                         self.bird_img_sel = 2
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
-                            self.y_increase = -5
+                            self.y_increase = -6
                             self.bird_img_sel = 1
 
             #Initialize the bird and the background.
             self.screen.blit(self.background_img, (0,0))
             self.bird(self.x_bird,self. y_bird, self.bird_img_sel)
             self.y_bird += self.y_increase
-            self.y_increase += 0.3
+
+            self.y_increase += 0.3 #Simulates gravity acceleration
 
             #Moves the pipes.
             self.pipes(self.x_pipe, self.y_pipe)
