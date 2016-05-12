@@ -5,16 +5,18 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((600, 800))
+        self.screen_size = (400, 600)
+        self.screen = pygame.display.set_mode(self.screen_size)
         pygame.display.set_caption('Flappy Bird')
         self.clock = pygame.time.Clock()
         self.sizes = {'Bird':(34, 24), 'Pipe':(52, 620)}
         self.score_img = {}
         self.clock = pygame.time.Clock()
-        self.ground, self.roof = 774, 1
-        self.x_bird, self.y_bird = 200.0, 400.0
-        self.x_pipe, self.y_pipe = 550, random.randint(210, 750)
-        self.x_second_pipe, self.y_second_pipe = 950, random.randint(210, 750)
+        self.ground, self.roof = 576, 0
+        self.x_bird, self.y_bird = 150.0, 300.0
+        self.x_pipe, self.y_pipe = 350, random.randint(170, 530)
+        self.x_second_pipe, self.y_second_pipe = 576, random.randint(150, 550)
+        self.space_between_pipes = 100
         self.bird_img_sel = 0
         self.y_increase = 0.0
         self.pipes_stop = 0
@@ -36,24 +38,25 @@ class Game:
 
     def pipes(self, x, y):
         """Simple function to create and move the obstacles, the pipes."""
-        self.screen.blit(self.pipe_img_top, (x, (y-780)))
+        y_top = y-(self.sizes['Pipe'][1]+self.space_between_pipes)
+        self.screen.blit(self.pipe_img_top, (x, y_top))
         self.screen.blit(self.pipe_img_bottom, (x, y))
-        if self.x_pipe == -50:
-            self.x_pipe = 700
-            self.y_pipe = random.randint(210, 750)
-        if self.x_second_pipe == -50:
-            self.x_second_pipe = 700
-            self.y_second_pipe = random.randint(210, 750)
+        if self.x_pipe == -52:
+            self.x_pipe = 400
+            self.y_pipe = random.randint(150, 550)
+        if self.x_second_pipe == -52:
+            self.x_second_pipe = 400
+            self.y_second_pipe = random.randint(150, 550)
         elif self.pipes_stop == 0:
-            self.x_second_pipe -= 2
-            self.x_pipe -= 2
+            self.x_second_pipe -= 1
+            self.x_pipe -= 1
 
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
         self.text = pygame.image.load('media/images/gameover.png')
         self.restart_button_img = pygame.image.load('media/images/restart-button.png')
-        self.screen.blit(self.text, [200, 350])
-        self.screen.blit(self.restart_button_img, [235, 550])
+        self.screen.blit(self.text, [104, 250])
+        self.screen.blit(self.restart_button_img, [135, 450])
 
     def restart_button(self):
         """Wait for a mouse click to reset or finish the game."""
@@ -64,8 +67,8 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_position = pygame.mouse.get_pos()
 
-        if 235 <= self.mouse_position[0] <= 365:
-            if 550 <= self.mouse_position[1] <= 590:
+        if 135 <= self.mouse_position[0] <= 265:
+            if 450 <= self.mouse_position[1] <= 490:
                 self.mouse_position = (0, 0)
                 return self.play()
 
@@ -84,8 +87,8 @@ class Game:
 
     def score(self):
         """Show the actual score over the screen."""
-        self.screen.blit(self.score_img[self.score_dozen], [290, 100])
-        self.screen.blit(self.score_img[self.score_unity], [310, 100])
+        self.screen.blit(self.score_img[self.score_dozen], [190, 100])
+        self.screen.blit(self.score_img[self.score_unity], [210, 100])
 
     def play(self):
         """Initialize the software."""
@@ -101,7 +104,7 @@ class Game:
                         self.bird_img_sel = 2
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
-                            self.y_increase = -6
+                            self.y_increase = -5
                             self.bird_img_sel = 1
 
             #Initialize the bird and the background.
@@ -109,7 +112,7 @@ class Game:
             self.bird(self.x_bird,self. y_bird, self.bird_img_sel)
             self.y_bird += self.y_increase
 
-            self.y_increase += 0.3 #Simulates gravity acceleration
+            self.y_increase += 0.25 #Simulates gravity acceleration
 
             #Moves the pipes.
             self.pipes(self.x_pipe, self.y_pipe)
@@ -132,7 +135,7 @@ class Game:
                 self.y_increase = 0
                 self.pipes_stop = 1
             elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_pipe+3)and(self.x_bird<=(self.x_pipe+50)):
-                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_pipe)or(self.y_bird<=(self.y_pipe-160)):
+                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_pipe)or(self.y_bird<=(self.y_pipe-self.space_between_pipes)):
                     # Bird dies
                     self.gameover()
                     pygame.display.flip()
@@ -140,7 +143,8 @@ class Game:
                     self.y_increase = 0
                     self.pipes_stop = 1
             elif ((self.x_bird + self.sizes['Bird'][0])>=self.x_second_pipe+3)and(self.x_bird<=(self.x_second_pipe+50)):
-                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_second_pipe)or(self.y_bird<=(self.y_second_pipe-160)):
+                if ((self.y_bird + self.sizes['Bird'][1])>=self.y_second_pipe)or(self.y_bird<=(self.y_second_pipe-self.space_between_pipes)):
+                    # Bird dies
                     self.gameover()
                     pygame.display.flip()
                     return 2
