@@ -48,6 +48,10 @@ class Game:
         self.restart_button_img = \
             pygame.image.load('media/images/restart-button.png')
 
+        # Where restart button will be blitted
+        self.restart_button_xy = \
+            ((self.screen_size[0]-130)/2.0, (self.screen_size[1])*(3.0/4.0))
+
     def bird(self, x, y, image_sel):
         """Simple function to bring life to the bird."""
         if image_sel == 0:
@@ -100,8 +104,7 @@ class Game:
         self.screen.blit(self.gameover_img, \
             [(self.screen_size[0]-192)/2.0, (self.screen_size[1]-42)/2.0])
         # Blits restart button to the half bottom of the screen
-        self.screen.blit(self.restart_button_img, \
-            [(self.screen_size[0]-130)/2.0, (self.screen_size[1])*(3.0/4.0)])
+        self.screen.blit(self.restart_button_img, self.restart_button_xy)
 
     def restart_button(self):
         """Wait for a mouse click to reset or finish the game."""
@@ -112,8 +115,10 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_position = pygame.mouse.get_pos()
 
-        if 135 <= self.mouse_position[0] <= 265:
-            if 450 <= self.mouse_position[1] <= 490:
+        if self.restart_button_xy[0] <= self.mouse_position[0] <= \
+                self.restart_button_xy[0] + 130:
+            if self.restart_button_xy[1] <= self.mouse_position[1] <= \
+                    self.restart_button_xy[1] + 40:
                 self.mouse_position = (0, 0)
                 return self.play()
 
