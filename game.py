@@ -35,7 +35,7 @@ class Game:
         self.bird_img_sel = 0
         self.y_increase = 0.0
         self.pipes_stop = 0
-        self.score_dozen, self.score_unity = 0, 0
+        self.score_val = 0
         self.mouse_position = (0, 0)
 
         self.background_img = \
@@ -52,6 +52,10 @@ class Game:
         # Where restart button will be blitted
         self.restart_button_xy = \
             ((self.screen_size[0]-130)/2.0, (self.screen_size[1])*(3.0/4.0))
+
+        # Variables used in detect_score() method
+        self.passed1 = False
+        self.passed2 = False
 
     def bird(self, x, y, image_sel):
         """Simple function to bring life to the bird."""
@@ -136,11 +140,33 @@ class Game:
         self.score_img[8] = pygame.image.load('media/images/8.png')
         self.score_img[9] = pygame.image.load('media/images/9.png')
 
+    def detect_score(self):
+        """Detects if bird passed one of the pipes and adds to the score if so"""
+
+        # Detect first pipe
+        if (self.x_bird > self.x_pipe + self.img_sizes['Pipe'][0]) \
+                and not self.passed1:
+            self.score_val += 1
+            self.passed1 = True
+        if (self.x_pipe + self.img_sizes['Pipe'][0] > self.x_bird) \
+                and self.passed1:
+            self.passed1 = False
+
+        # Detect second pipe
+        if (self.x_bird > self.x_second_pipe + self.img_sizes['Pipe'][0]) \
+                and not self.passed2:
+            self.score_val += 1
+            self.passed2 = True
+        if (self.x_second_pipe + self.img_sizes['Pipe'][0] > self.x_bird) \
+                and self.passed2:
+            self.passed2 = False
+
     def score(self):
         """Show the actual score over the screen."""
-        self.screen.blit(self.score_img[self.score_dozen], \
+        self.detect_score()
+        self.screen.blit(self.score_img[self.score_val/10], \
             [self.screen_size[0]/2 - 22, 100])
-        self.screen.blit(self.score_img[self.score_unity], \
+        self.screen.blit(self.score_img[self.score_val%10], \
             [self.screen_size[0]/2, 100])
 
     def play(self):
@@ -170,14 +196,6 @@ class Game:
             self.pipes() # Update pipes
 
             # Count the score.
-            if (self.x_bird > self.x_pipe+50 and self.x_bird < self.x_pipe+52)\
-                    or (self.x_bird > self.x_second_pipe+50 and \
-                        self.x_bird < self.x_second_pipe+52):
-                if self.score_unity == 9:
-                    self.score_dozen += 1
-                    self.score_unity = 0
-                else:
-                    self.score_unity += 1
             self.score()
 
             if (self.y_bird > self.ground+4) or (self.y_bird < self.roof-4):
