@@ -44,6 +44,10 @@ class Game:
         self.pipe_img_top = \
             pygame.image.load('media/images/pipe-green-top.png')
 
+        self.gameover_img = pygame.image.load('media/images/gameover.png')
+        self.restart_button_img = \
+            pygame.image.load('media/images/restart-button.png')
+
     def bird(self, x, y, image_sel):
         """Simple function to bring life to the bird."""
         if image_sel == 0:
@@ -91,11 +95,13 @@ class Game:
 
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
-        self.text = pygame.image.load('media/images/gameover.png')
-        self.restart_button_img = \
-            pygame.image.load('media/images/restart-button.png')
-        self.screen.blit(self.text, [104, 250])
-        self.screen.blit(self.restart_button_img, [135, 450])
+
+        # Blits game over in the middle of the screen
+        self.screen.blit(self.gameover_img, \
+            [(self.screen_size[0]-192)/2.0, (self.screen_size[1]-42)/2.0])
+        # Blits restart button to the half bottom of the screen
+        self.screen.blit(self.restart_button_img, \
+            [(self.screen_size[0]-130)/2.0, (self.screen_size[1])*(3.0/4.0)])
 
     def restart_button(self):
         """Wait for a mouse click to reset or finish the game."""
