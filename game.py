@@ -13,7 +13,8 @@ class Game:
         self.img_sizes = {'Bird':(34, 24), 'Pipe':(52, 620)}
         self.score_img = {}
         self.clock = pygame.time.Clock()
-        self.ground, self.roof = self.screen_size[1]-self.img_sizes['Bird'][1], 0
+        self.ground = self.screen_size[1]-self.img_sizes['Bird'][1]
+        self.roof = 0
 
         self.space_between_pipes = 110 # Space between top and bottom pipes
         self.pipe_limits = 50 # Boundary to blit pipes
@@ -21,9 +22,14 @@ class Game:
         self.rand_low = self.space_between_pipes + self.pipe_limits
         self.rand_high = self.screen_size[1] - self.pipe_limits
 
-        self.x_bird, self.y_bird = self.screen_size[0]/3.0, self.screen_size[1]/2.0
-        self.x_pipe, self.y_pipe = 350, random.randint(self.rand_low, self.rand_high)
-        self.x_second_pipe, self.y_second_pipe = 576, random.randint(self.rand_low, self.rand_high)
+        self.x_bird = self.screen_size[0]/3.0
+        self.y_bird = self.screen_size[1]/2.0
+
+        self.x_pipe = 350
+        self.y_pipe = random.randint(self.rand_low, self.rand_high)
+
+        self.x_second_pipe = 576
+        self.y_second_pipe = random.randint(self.rand_low, self.rand_high)
 
         self.bird_img_sel = 0
         self.y_increase = 0.0
@@ -77,9 +83,11 @@ class Game:
         self.screen.blit(self.pipe_img_bottom, (self.x_pipe, self.y_pipe))
 
         # Blit second pipe
-        y_top = self.y_second_pipe-(self.img_sizes['Pipe'][1]+self.space_between_pipes)
+        y_top = self.y_second_pipe - \
+            (self.img_sizes['Pipe'][1]+self.space_between_pipes)
         self.screen.blit(self.pipe_img_top, (self.x_second_pipe, y_top))
-        self.screen.blit(self.pipe_img_bottom, (self.x_second_pipe, self.y_second_pipe))
+        self.screen.blit(self.pipe_img_bottom, \
+            (self.x_second_pipe, self.y_second_pipe))
 
     def gameover(self):
         """Prints 'game over' when the bird hit the ground or the roof."""
@@ -174,10 +182,11 @@ class Game:
                     return 2
                     self.y_increase = 0
                     self.pipes_stop = 1
-            elif ((self.x_bird + self.img_sizes['Bird'][0])>=self.x_second_pipe+3)\
+            elif ((self.x_bird+self.img_sizes['Bird'][0])>=self.x_second_pipe+3)\
                     and(self.x_bird<=(self.x_second_pipe+50)):
-                if ((self.y_bird + self.img_sizes['Bird'][1])>=self.y_second_pipe)\
-                    or(self.y_bird<=(self.y_second_pipe-self.space_between_pipes)):
+                if ((self.y_bird+self.img_sizes['Bird'][1])>=self.y_second_pipe)\
+                        or(self.y_bird<=(self.y_second_pipe - \
+                                                self.space_between_pipes)):
                     # Bird dies
                     self.gameover()
                     pygame.display.flip()
