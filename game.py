@@ -171,18 +171,18 @@ class Game:
     def bird_dies(self):
         """returns True if bird is dead"""
 
-        if (self.y_bird > self.ground+4) or (self.y_bird < self.roof-4):
+        if (self.y_bird + 5 > self.ground) or (self.y_bird < self.roof):
             # Bird dies
             return True
 
-        elif ((self.x_bird + self.img_sizes['Bird'][0])>=self.x_pipe+3) and\
-                (self.x_bird<=(self.x_pipe+50)):
+        elif ((self.x_bird + self.img_sizes['Bird'][0])>=self.x_pipe) and\
+                (self.x_bird<=(self.x_pipe+self.img_sizes['Pipe'][0])):
             if ((self.y_bird + self.img_sizes['Bird'][1])>=self.y_pipe) or \
                 (self.y_bird<=(self.y_pipe-self.space_between_pipes)):
                 # Bird dies
                 return True
-        elif ((self.x_bird+self.img_sizes['Bird'][0])>=self.x_second_pipe+3)\
-                and(self.x_bird<=(self.x_second_pipe+50)):
+        elif ((self.x_bird+self.img_sizes['Bird'][0])>=self.x_second_pipe)\
+                and(self.x_bird<=(self.x_second_pipe+self.img_sizes['Pipe'][0])):
             if ((self.y_bird+self.img_sizes['Bird'][1])>=self.y_second_pipe)\
                     or(self.y_bird<=(self.y_second_pipe - \
                                             self.space_between_pipes)):
@@ -196,8 +196,6 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return 0
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.mouse_position = pygame.mouse.get_pos()
                 if not self.pipes_stop:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
@@ -218,7 +216,7 @@ class Game:
                 self.bird()
                 self.gameover()
                 pygame.display.flip()
-                return 2
+                return 1
                 self.y_increase = 0
                 self.pipes_stop = True
             else:
