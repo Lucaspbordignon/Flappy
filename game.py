@@ -25,10 +25,11 @@ class Game:
         self.x_bird = self.screen_size[0]/3.0
         self.y_bird = self.screen_size[1]/2.0
 
-        self.x_pipe = 350
+        self.x_pipe = 500#self.screen_size[0]*(5.0/6.0)
         self.y_pipe = random.randint(self.rand_low, self.rand_high)
 
-        self.x_second_pipe = 576
+        self.x_second_pipe = self.x_pipe + \
+            (self.screen_size[0] + self.img_sizes['Pipe'][0])/2.0
         self.y_second_pipe = random.randint(self.rand_low, self.rand_high)
 
         self.bird_img_sel = 0
