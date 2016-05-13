@@ -32,7 +32,6 @@ class Game:
             (self.screen_size[0] + self.img_sizes['Pipe'][0])/2.0
         self.y_second_pipe = random.randint(self.rand_low, self.rand_high)
 
-        self.bird_img_sel = 0
         self.y_increase = 0.0
         self.pipes_stop = False
         self.score_val = 0
@@ -57,18 +56,18 @@ class Game:
         self.passed1 = False
         self.passed2 = False
 
-    def bird(self, x, y, image_sel):
+    def bird(self):
         """Simple function to bring life to the bird."""
-        if image_sel == 0:
+        if self.y_increase == 0:
             self.bird_img = \
                 pygame.image.load('media/images/yellowbird-midflap.png')
-        elif image_sel == 1:
+        elif self.y_increase < 0:
             self.bird_img = \
                 pygame.image.load('media/images/yellowbird-upflap.png')
-        elif image_sel == 2:
+        elif self.y_increase > 0:
             self.bird_img = \
                 pygame.image.load('media/images/yellowbird-downflap.png')
-        self.screen.blit(self.bird_img, (x, y))
+        self.screen.blit(self.bird_img, (self.x_bird, self.y_bird))
 
     def pipes(self):
         """Simple function to update the pipes positions."""
@@ -200,17 +199,12 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_position = pygame.mouse.get_pos()
                 if not self.pipes_stop:
-                    if event.type == pygame.KEYUP:
-                        self.bird_img_sel = 2
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
                             self.y_increase = -5
-                            self.bird_img_sel = 1
 
             # Initialize the bird and the background.
             self.screen.blit(self.background_img, (0, 0))
-            self.bird(self.x_bird, self. y_bird, self.bird_img_sel)
-            self.y_bird += self.y_increase
 
             self.y_increase += 0.25 #Simulates gravity acceleration
 
@@ -221,6 +215,7 @@ class Game:
 
             if self.bird_dies():
                 # Bird dies
+                self.bird()
                 self.gameover()
                 pygame.display.flip()
                 return 2
@@ -228,6 +223,9 @@ class Game:
                 self.pipes_stop = True
             else:
                 self.pipes_stop = False
+
+            self.bird()
+            self.y_bird += self.y_increase
 
             # Update the screen.
             pygame.display.flip()
