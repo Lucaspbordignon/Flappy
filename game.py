@@ -156,7 +156,9 @@ class Game:
             self.pipes() # Update pipes
 
             # Count the score.
-            if self.x_bird > self.x_pipe+48 and self.x_bird < self.x_pipe+52:
+            if (self.x_bird > self.x_pipe+50 and self.x_bird < self.x_pipe+52)\
+                    or (self.x_bird > self.x_second_pipe+50 and \
+                        self.x_bird < self.x_second_pipe+52):
                 if self.score_unity == 9:
                     self.score_dozen += 1
                     self.score_unity = 0
