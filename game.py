@@ -25,7 +25,7 @@ class Game:
         self.x_bird = self.screen_size[0]/3.0
         self.y_bird = self.screen_size[1]/2.0
 
-        self.x_pipe = 500#self.screen_size[0]*(5.0/6.0)
+        self.x_pipe = self.screen_size[0]*(5.0/6.0)
         self.y_pipe = random.randint(self.rand_low, self.rand_high)
 
         self.x_second_pipe = self.x_pipe + \
@@ -138,8 +138,10 @@ class Game:
 
     def score(self):
         """Show the actual score over the screen."""
-        self.screen.blit(self.score_img[self.score_dozen], [190, 100])
-        self.screen.blit(self.score_img[self.score_unity], [210, 100])
+        self.screen.blit(self.score_img[self.score_dozen], \
+            [self.screen_size[0]/2 - 22, 100])
+        self.screen.blit(self.score_img[self.score_unity], \
+            [self.screen_size[0]/2, 100])
 
     def play(self):
         """Initialize the software."""
