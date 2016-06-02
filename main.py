@@ -4,7 +4,6 @@ if __name__ == "__main__":
 
     test = Game()
     restart = test.play()
-    while restart == 1 or restart == 2:
+    while restart == 1:
         test = Game()
-        if restart == 2:
-            restart = test.restart_button()
+        restart = test.restart_button()
