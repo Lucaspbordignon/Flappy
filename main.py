@@ -2,8 +2,8 @@ from game import *
 
 if __name__ == "__main__":
 
-    test = Game()
-    restart = test.play()
+    game = Game()
+    restart = game.play()
     while restart == 1:
-        test = Game()
-        restart = test.restart_button()
+        game = Game()
+        restart = game.restart_button()
