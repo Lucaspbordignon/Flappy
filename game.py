@@ -23,7 +23,7 @@ class Game:
         self.rand_high = self.screen_size[1] - self.pipe_limits
 
         self.x_bird = self.screen_size[0]/3.0
-        self.y_bird = self.screen_size[1]/2.0
+        self.y_bird = self.screen_size[1]/2.5
 
         self.x_pipe = self.screen_size[0]*(5.0/6.0)
         self.y_pipe = random.randint(self.rand_low, self.rand_high)
@@ -112,19 +112,19 @@ class Game:
 
     def restart_button(self):
         """Wait for a mouse click to reset or finish the game."""
-        while self.mouse_position == (0, 0):
+
+        while (True):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return 0
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_position = pygame.mouse.get_pos()
-
-        if self.restart_button_xy[0] <= self.mouse_position[0] <= \
-                self.restart_button_xy[0] + 130:
-            if self.restart_button_xy[1] <= self.mouse_position[1] <= \
-                    self.restart_button_xy[1] + 40:
-                self.mouse_position = (0, 0)
-                return self.play()
+            if self.restart_button_xy[0] <= self.mouse_position[0] <= \
+                    self.restart_button_xy[0] + 130:
+                if self.restart_button_xy[1] <= self.mouse_position[1] <= \
+                       self.restart_button_xy[1] + 40:
+                    return self.play()
+                    break
 
     def load_score_images(self):
         """Load external files (images) for the score."""
