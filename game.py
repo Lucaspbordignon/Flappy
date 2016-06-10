@@ -165,10 +165,15 @@ class Game:
     def score(self):
         """Show the actual score over the screen."""
         self.detect_score()
-        self.screen.blit(self.score_img[self.score_val/10],
-            [self.screen_size[0]/2 - 22, 100])
-        self.screen.blit(self.score_img[self.score_val % 10],
-            [self.screen_size[0]/2, 100])
+        if (self.score_val < 10):
+            self.screen.blit(self.score_img[self.score_val],
+                [self.screen_size[0]/2 - 10, 100])
+        else:
+            str_score_val = str(self.score_val)
+            self.screen.blit(self.score_img[int(str_score_val[0])],
+                [self.screen_size[0]/2 - 22, 100])
+            self.screen.blit(self.score_img[int(str_score_val[1])],
+                [self.screen_size[0]/2, 100])
 
     def bird_dies(self):
         """returns True if bird is dead"""
